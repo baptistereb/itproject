@@ -15,7 +15,6 @@ class MainWindow(QMainWindow):
         self.mistakes = ["-1 calculus", "-2 explanations", "-42 because why not", "-3 ?", "-0.5 test"]
         self.studentAnswer = [[["A good answer", "Another", "try something"], ["b1", "b2", "b3"],["c1", "c2", "c3"]], [["q1", "q2", "q3"], ["b1", "b2", "b3"],["c1", "c2", "c3"]], [["Student 2 - q1", "q2", "q3"], ["b1", "b2", "b3"],["c1", "c2", "c3"]]]
         self.totalStudents=len(self.studentAnswer)
-        self.changeStudent(0)
 
         self.showFirstWindow()
 
@@ -33,6 +32,7 @@ class MainWindow(QMainWindow):
             if selected_files:
                 file_path = selected_files[0]
                 print("Selected file:", file_path)
+                self.changeStudent(0)
 
     def changeStudent(self,num):
         if num >= 0 and num <= self.totalStudents:
@@ -62,6 +62,7 @@ class MainWindow(QMainWindow):
         upload_button.setGeometry(150, 80, 100, 30)
         upload_button.clicked.connect(self.upload_file)
         #self.showWindow(self.questions)
+        self.show()
 
     def showLastWindow(self):
         self.setWindowTitle("IT Project - Finish")
