@@ -3,8 +3,9 @@
 import sys
 
 from PyQt6.QtCore import QSize, Qt
-from PyQt6.QtWidgets import QApplication, QMainWindow, QScrollArea, QCheckBox, QLabel, QDoubleSpinBox, QLineEdit, QTextBrowser, QPushButton, QHBoxLayout, QVBoxLayout, QWidget,QPlainTextEdit, QProgressBar
+from PyQt6.QtWidgets import QApplication, QMainWindow, QScrollArea, QCheckBox, QLabel, QDoubleSpinBox, QLineEdit, QTextBrowser, QPushButton, QHBoxLayout, QVBoxLayout, QWidget,QPlainTextEdit, QProgressBar, QWidget, QFileDialog
 from PyQt6.QtGui import QPixmap, QTransform
+import pandas as pd
 
 
 class MainWindow(QMainWindow):
@@ -13,17 +14,25 @@ class MainWindow(QMainWindow):
         self.exercise=0
         self.mistakes = ["-1 calculus", "-2 explanations", "-42 because why not", "-3 ?", "-0.5 test"]
         self.studentAnswer = [[["A good answer", "Another", "try something"], ["b1", "b2", "b3"],["c1", "c2", "c3"]], [["q1", "q2", "q3"], ["b1", "b2", "b3"],["c1", "c2", "c3"]], [["Student 2 - q1", "q2", "q3"], ["b1", "b2", "b3"],["c1", "c2", "c3"]]]
-        self.progressBarWidget = QProgressBar()
-        self.errorText = QLineEdit()
-        self.errorNum = QDoubleSpinBox()
         self.totalStudents=len(self.studentAnswer)
         self.changeStudent(0)
 
-        self.showWindow(self.questions)
+        self.showFirstWindow()
 
     def changeExercise(self,num):
         self.exercise=num
         self.showWindow(self.questions)
+
+    def upload_file(self):
+        file_dialog = QFileDialog(self)
+        file_dialog.setWindowTitle("Select a File")
+        file_dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+
+        if file_dialog.exec():
+            selected_files = file_dialog.selectedFiles()
+            if selected_files:
+                file_path = selected_files[0]
+                print("Selected file:", file_path)
 
     def changeStudent(self,num):
         if num >= 0 and num <= self.totalStudents:
@@ -45,6 +54,14 @@ class MainWindow(QMainWindow):
         self.errorText.clear()
         self.showWindow(self.questions)
 
+    def showFirstWindow(self):
+        self.setWindowTitle("File Upload Example")
+        self.setGeometry(100, 100, 400, 200)
+
+        upload_button = QPushButton("Upload File", self)
+        upload_button.setGeometry(150, 80, 100, 30)
+        upload_button.clicked.connect(self.upload_file)
+        #self.showWindow(self.questions)
 
     def showLastWindow(self):
         self.setWindowTitle("IT Project - Finish")
@@ -63,7 +80,7 @@ class MainWindow(QMainWindow):
 
         previousStudent = QPushButton("Previous Student")
         previousStudent.setCheckable(True)
-        #previousStudent.pressed.connect(lambda : )
+        previousStudent.pressed.connect(lambda: self.changeStudent(self.totalStudents-1))
         nextPreviousBar.addWidget(previousStudent)
 
         self.UpdateProgressBar()
@@ -88,6 +105,10 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("IT Project - Exercise "+str(self.exercise+1))
         self.setFixedSize(QSize(1000, 500))
         #self.showFullScreen()
+
+        self.progressBarWidget = QProgressBar()
+        self.errorText = QLineEdit()
+        self.errorNum = QDoubleSpinBox()
 
         #MENU
         menu = QHBoxLayout()
